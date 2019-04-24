@@ -8,6 +8,8 @@ part of 'goal.dart';
 
 class _$Goal extends Goal {
   @override
+  final int id;
+  @override
   final String name;
   @override
   final DateTime date;
@@ -15,12 +17,12 @@ class _$Goal extends Goal {
   factory _$Goal([void Function(GoalBuilder) updates]) =>
       (new GoalBuilder()..update(updates)).build();
 
-  _$Goal._({this.name, this.date}) : super._() {
+  _$Goal._({this.id, this.name, this.date}) : super._() {
+    if (id == null) {
+      throw new BuiltValueNullFieldError('Goal', 'id');
+    }
     if (name == null) {
       throw new BuiltValueNullFieldError('Goal', 'name');
-    }
-    if (date == null) {
-      throw new BuiltValueNullFieldError('Goal', 'date');
     }
   }
 
@@ -34,17 +36,21 @@ class _$Goal extends Goal {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Goal && name == other.name && date == other.date;
+    return other is Goal &&
+        id == other.id &&
+        name == other.name &&
+        date == other.date;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, name.hashCode), date.hashCode));
+    return $jf($jc($jc($jc(0, id.hashCode), name.hashCode), date.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('Goal')
+          ..add('id', id)
           ..add('name', name)
           ..add('date', date))
         .toString();
@@ -53,6 +59,10 @@ class _$Goal extends Goal {
 
 class GoalBuilder implements Builder<Goal, GoalBuilder> {
   _$Goal _$v;
+
+  int _id;
+  int get id => _$this._id;
+  set id(int id) => _$this._id = id;
 
   String _name;
   String get name => _$this._name;
@@ -66,6 +76,7 @@ class GoalBuilder implements Builder<Goal, GoalBuilder> {
 
   GoalBuilder get _$this {
     if (_$v != null) {
+      _id = _$v.id;
       _name = _$v.name;
       _date = _$v.date;
       _$v = null;
@@ -88,7 +99,7 @@ class GoalBuilder implements Builder<Goal, GoalBuilder> {
 
   @override
   _$Goal build() {
-    final _$result = _$v ?? new _$Goal._(name: name, date: date);
+    final _$result = _$v ?? new _$Goal._(id: id, name: name, date: date);
     replace(_$result);
     return _$result;
   }

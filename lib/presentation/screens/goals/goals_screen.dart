@@ -1,40 +1,44 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:my_goals/data/goal.dart';
-import 'package:my_goals/presentation/screens/goals/goals_presentation.dart';
+import 'package:my_goals/domain/goals_manager.dart';
+import 'package:my_goals/presentation/screens/goals/goals.dart';
 import 'package:my_goals/presentation/screens/routes.dart';
 import 'package:built_collection/built_collection.dart';
 
 class GoalsScreen extends StatefulWidget {
 
+  final GoalsManager goalsManager;
+
+  GoalsScreen(this.goalsManager);
+
   @override
-  State<StatefulWidget> createState() => _GoalsScreenState();
+  State<StatefulWidget> createState() => _GoalsScreenState(goalsManager);
 
 }
 
 abstract class GoalsView {
-  BuiltList<Goal> goals;
+  GoalsViewState viewState;
 }
 
 class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
 
   @override
-  set goals(BuiltList<Goal> goals) {
+  set viewState(GoalsViewState viewState) {
     setState(() {
-      print('goals count is ${goals.length}');
-      _goals = goals;
+      _viewState = viewState;
     });
   }
-  get goals {
-    return _goals;
+  @override
+  get viewState {
+    return _viewState;
   }
-
-  var _goals = BuiltList<Goal>();
+  GoalsViewState _viewState;
 
   GoalsPresenter _presenter;
 
-  _GoalsScreenState() {
-    _presenter = GoalsPresenter(this);
+  _GoalsScreenState(GoalsManager goalsManager) {
+    _presenter = GoalsPresenter(this, goalsManager);
   }
 
   @override
@@ -61,13 +65,41 @@ class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
   }
 
   Widget _body() {
-    return Center(
-      child: Text(
-        'Тут пусто :с',
-        style: TextStyle(
-          fontSize: 15.0,
+    if(viewState == null) return Container();
+    if(viewState.loading) {
+      return Center(
+        child: Text('Загрузка...'),
+      );
+    }
+    if(viewState.goals.isEmpty) {
+      return Center(
+        child: Text(
+          'Тут пусто :с',
+          style: TextStyle(
+            fontSize: 15.0,
+          ),
         ),
-      ),
+      );
+    } else {
+      return _goals();
+    }
+  }
+
+  Widget _goals() {
+    return ListView.builder(
+      itemCount: viewState.goals.length,
+      itemBuilder: (context, i) {
+        var goal = viewState.goals[i];
+        return Container(
+          margin: EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: <Widget>[
+              Text(goal.name),
+              Text(goal.date.toString()),
+            ],
+          ),
+        );
+      },
     );
   }
 

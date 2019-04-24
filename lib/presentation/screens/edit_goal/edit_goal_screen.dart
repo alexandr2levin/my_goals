@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:my_goals/presentation/screens/edit_goal/edit_goal.dart';
 
 class EditGoalScreen extends StatefulWidget {
   @override
@@ -7,7 +8,19 @@ class EditGoalScreen extends StatefulWidget {
 
 }
 
-class _EditGoalsScreenState extends State<EditGoalScreen> {
+class _EditGoalsScreenState extends State<EditGoalScreen> implements EditGoalView {
+
+  @override
+  set viewState(EditGoalViewState viewState) {
+    setState(() {
+      _viewState = viewState;
+    });
+  }
+  @override
+  get viewState {
+    return _viewState;
+  }
+  EditGoalViewState _viewState;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +41,11 @@ class _EditGoalsScreenState extends State<EditGoalScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void routeBack() {
+    Navigator.of(context).pop();
   }
 
 }

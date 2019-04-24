@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:my_goals/domain/goals_manager.dart';
 import 'package:my_goals/presentation/screens/edit_goal/edit_goal_screen.dart';
-import 'package:my_goals/presentation/screens/goals/goals_presentation.dart';
+import 'package:my_goals/presentation/screens/goals/goals.dart';
 import 'package:my_goals/presentation/screens/goals/goals_screen.dart';
 import 'package:my_goals/presentation/screens/routes.dart';
 
@@ -22,12 +22,12 @@ class MyApp extends StatelessWidget {
     return CupertinoApp(
       title: 'Мои цели',
       theme: CupertinoThemeData(),
-      initialRoute: '/',
+      initialRoute: Routes.goals,
       onGenerateRoute: (routeSettings) {
         switch(routeSettings.name) {
           case Routes.goals:
             return CupertinoPageRoute(
-              builder: (context) => GoalsScreen(),
+              builder: (context) => GoalsScreen(goalsManager),
             );
           case Routes.editGoal:
             return CupertinoPageRoute(

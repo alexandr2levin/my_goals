@@ -5,7 +5,9 @@ part 'goal.g.dart';
 
 abstract class Goal implements Built<Goal, GoalBuilder> {
 
+  int get id;
   String get name;
+  @nullable
   DateTime get date;
 
   Goal._();
