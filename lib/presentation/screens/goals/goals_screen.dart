@@ -17,23 +17,19 @@ class GoalsScreen extends StatefulWidget {
 
 }
 
-abstract class GoalsView {
-  GoalsViewState viewState;
-}
-
 class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
 
   @override
-  set viewState(GoalsViewState viewState) {
+  set model(GoalsModel viewState) {
     setState(() {
       _viewState = viewState;
     });
   }
   @override
-  get viewState {
+  get model {
     return _viewState;
   }
-  GoalsViewState _viewState;
+  GoalsModel _viewState;
 
   GoalsPresenter _presenter;
 
@@ -56,7 +52,7 @@ class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
           padding: EdgeInsets.zero,
           child: Text('Добавить'),
           onPressed: () {
-            Navigator.of(context).pushNamed(Routes.editGoal);
+            Navigator.of(context).pushNamed(Routes.createGoal);
           },
         ),
       ),
@@ -65,13 +61,13 @@ class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
   }
 
   Widget _body() {
-    if(viewState == null) return Container();
-    if(viewState.loading) {
+    if(model == null) return Container();
+    if(model.loading) {
       return Center(
         child: Text('Загрузка...'),
       );
     }
-    if(viewState.goals.isEmpty) {
+    if(model.goals.isEmpty) {
       return Center(
         child: Text(
           'Тут пусто :с',
@@ -87,16 +83,28 @@ class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
 
   Widget _goals() {
     return ListView.builder(
-      itemCount: viewState.goals.length,
+      itemCount: model.goals.length,
       itemBuilder: (context, i) {
-        var goal = viewState.goals[i];
-        return Container(
-          margin: EdgeInsets.only(top: 8.0),
-          child: Column(
-            children: <Widget>[
-              Text(goal.name),
-              Text(goal.date.toString()),
-            ],
+        var goal = model.goals[i];
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.editGoal, arguments: goal.id);
+          },
+          child: Container(
+            margin: EdgeInsets.only(top: 8.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  goal.name,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(goal.date.toString()),
+              ],
+            ),
           ),
         );
       },

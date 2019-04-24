@@ -7,6 +7,10 @@ import 'package:my_goals/presentation/screens/goals/goals_screen.dart';
 
 part 'goals.g.dart';
 
+abstract class GoalsView {
+  GoalsModel model;
+}
+
 class GoalsPresenter {
 
   GoalsView view;
@@ -15,12 +19,12 @@ class GoalsPresenter {
   GoalsPresenter(this.view, this.goalsManager);
 
   void loadGoals() async {
-    view.viewState = GoalsViewState((b) => b
+    view.model = GoalsModel((b) => b
       ..loading = true
     );
 
     var goals = await goalsManager.getGoals();
-    view.viewState = GoalsViewState((b) => b
+    view.model = GoalsModel((b) => b
       ..goals = goals.toBuilder()
       ..loading = false
     );
@@ -28,11 +32,11 @@ class GoalsPresenter {
 
 }
 
-abstract class GoalsViewState implements Built<GoalsViewState, GoalsViewStateBuilder> {
+abstract class GoalsModel implements Built<GoalsModel, GoalsModelBuilder> {
 
   bool get loading;
   BuiltList<Goal> get goals;
 
-  GoalsViewState._();
-  factory GoalsViewState([updates(GoalsViewStateBuilder b)]) = _$GoalsViewState;
+  GoalsModel._();
+  factory GoalsModel([updates(GoalsModelBuilder b)]) = _$GoalsModel;
 }

@@ -29,9 +29,14 @@ class MyApp extends StatelessWidget {
             return CupertinoPageRoute(
               builder: (context) => GoalsScreen(goalsManager),
             );
-          case Routes.editGoal:
+          case Routes.createGoal:
             return CupertinoPageRoute(
-              builder: (context) => EditGoalScreen(),
+              builder: (context) => EditGoalScreen.createMode(goalsManager),
+            );
+          case Routes.editGoal:
+            var goalId = routeSettings.arguments as int;
+            return CupertinoPageRoute(
+              builder: (context) => EditGoalScreen.editMode(goalsManager, goalId),
             );
           default:
             throw 'no case for route name ${routeSettings.name}';

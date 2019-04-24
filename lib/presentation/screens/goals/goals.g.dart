@@ -6,36 +6,35 @@ part of 'goals.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-class _$GoalsViewState extends GoalsViewState {
+class _$GoalsModel extends GoalsModel {
   @override
   final bool loading;
   @override
   final BuiltList<Goal> goals;
 
-  factory _$GoalsViewState([void Function(GoalsViewStateBuilder) updates]) =>
-      (new GoalsViewStateBuilder()..update(updates)).build();
+  factory _$GoalsModel([void Function(GoalsModelBuilder) updates]) =>
+      (new GoalsModelBuilder()..update(updates)).build();
 
-  _$GoalsViewState._({this.loading, this.goals}) : super._() {
+  _$GoalsModel._({this.loading, this.goals}) : super._() {
     if (loading == null) {
-      throw new BuiltValueNullFieldError('GoalsViewState', 'loading');
+      throw new BuiltValueNullFieldError('GoalsModel', 'loading');
     }
     if (goals == null) {
-      throw new BuiltValueNullFieldError('GoalsViewState', 'goals');
+      throw new BuiltValueNullFieldError('GoalsModel', 'goals');
     }
   }
 
   @override
-  GoalsViewState rebuild(void Function(GoalsViewStateBuilder) updates) =>
+  GoalsModel rebuild(void Function(GoalsModelBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  GoalsViewStateBuilder toBuilder() =>
-      new GoalsViewStateBuilder()..replace(this);
+  GoalsModelBuilder toBuilder() => new GoalsModelBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is GoalsViewState &&
+    return other is GoalsModel &&
         loading == other.loading &&
         goals == other.goals;
   }
@@ -47,16 +46,15 @@ class _$GoalsViewState extends GoalsViewState {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('GoalsViewState')
+    return (newBuiltValueToStringHelper('GoalsModel')
           ..add('loading', loading)
           ..add('goals', goals))
         .toString();
   }
 }
 
-class GoalsViewStateBuilder
-    implements Builder<GoalsViewState, GoalsViewStateBuilder> {
-  _$GoalsViewState _$v;
+class GoalsModelBuilder implements Builder<GoalsModel, GoalsModelBuilder> {
+  _$GoalsModel _$v;
 
   bool _loading;
   bool get loading => _$this._loading;
@@ -66,9 +64,9 @@ class GoalsViewStateBuilder
   ListBuilder<Goal> get goals => _$this._goals ??= new ListBuilder<Goal>();
   set goals(ListBuilder<Goal> goals) => _$this._goals = goals;
 
-  GoalsViewStateBuilder();
+  GoalsModelBuilder();
 
-  GoalsViewStateBuilder get _$this {
+  GoalsModelBuilder get _$this {
     if (_$v != null) {
       _loading = _$v.loading;
       _goals = _$v.goals?.toBuilder();
@@ -78,24 +76,24 @@ class GoalsViewStateBuilder
   }
 
   @override
-  void replace(GoalsViewState other) {
+  void replace(GoalsModel other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$GoalsViewState;
+    _$v = other as _$GoalsModel;
   }
 
   @override
-  void update(void Function(GoalsViewStateBuilder) updates) {
+  void update(void Function(GoalsModelBuilder) updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$GoalsViewState build() {
-    _$GoalsViewState _$result;
+  _$GoalsModel build() {
+    _$GoalsModel _$result;
     try {
       _$result =
-          _$v ?? new _$GoalsViewState._(loading: loading, goals: goals.build());
+          _$v ?? new _$GoalsModel._(loading: loading, goals: goals.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -103,7 +101,7 @@ class GoalsViewStateBuilder
         goals.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'GoalsViewState', _$failedField, e.toString());
+            'GoalsModel', _$failedField, e.toString());
       }
       rethrow;
     }

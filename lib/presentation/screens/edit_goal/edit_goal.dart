@@ -8,7 +8,7 @@ import 'package:my_goals/presentation/screens/edit_goal/edit_goal_screen.dart';
 part 'edit_goal.g.dart';
 
 abstract class EditGoalView {
-  EditGoalViewState viewState;
+  EditGoalModel model;
   void routeBack();
 }
 
@@ -24,14 +24,14 @@ class EditGoalPresenter {
   EditGoalPresenter(this.view, this.goalsManager, this.goalId);
 
   void loadGoal() async {
-    view.viewState = EditGoalViewState((b) => b
+    view.model = EditGoalModel((b) => b
         ..loading = true
         ..saving = false
     );
 
     if(editMode) {
       var goal = await goalsManager.getGoal(goalId);
-      view.viewState = view.viewState.rebuild((b) => b
+      view.model = view.model.rebuild((b) => b
         ..mode = EditGoalMode.edit
         ..loading = false
         ..goal = goal.toBuilder()
@@ -42,7 +42,7 @@ class EditGoalPresenter {
         ..name = ''
         ..date = null
       );
-      view.viewState = view.viewState.rebuild((b) => b
+      view.model = view.model.rebuild((b) => b
         ..mode = EditGoalMode.create
         ..loading = false
         ..goal = newGoal.toBuilder()
@@ -51,17 +51,17 @@ class EditGoalPresenter {
   }
 
   void save() async {
-    view.viewState = view.viewState.rebuild((b) => b
+    view.model = view.model.rebuild((b) => b
       ..saving = true
     );
 
-    await goalsManager.saveGoal(view.viewState.goal);
+    await goalsManager.saveGoal(view.model.goal);
 
     view.routeBack();
   }
 }
 
-abstract class EditGoalViewState implements Built<EditGoalViewState, EditGoalViewStateBuilder> {
+abstract class EditGoalModel implements Built<EditGoalModel, EditGoalModelBuilder> {
 
   @nullable
   EditGoalMode get mode;
@@ -70,8 +70,8 @@ abstract class EditGoalViewState implements Built<EditGoalViewState, EditGoalVie
   @nullable
   Goal get goal;
 
-  EditGoalViewState._();
-  factory EditGoalViewState([updates(EditGoalViewStateBuilder b)]) = _$EditGoalViewState;
+  EditGoalModel._();
+  factory EditGoalModel([updates(EditGoalModelBuilder b)]) = _$EditGoalModel;
 }
 
 enum EditGoalMode {

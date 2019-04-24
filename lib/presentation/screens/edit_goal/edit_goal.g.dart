@@ -6,7 +6,7 @@ part of 'edit_goal.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-class _$EditGoalViewState extends EditGoalViewState {
+class _$EditGoalModel extends EditGoalModel {
   @override
   final EditGoalMode mode;
   @override
@@ -16,32 +16,30 @@ class _$EditGoalViewState extends EditGoalViewState {
   @override
   final Goal goal;
 
-  factory _$EditGoalViewState(
-          [void Function(EditGoalViewStateBuilder) updates]) =>
-      (new EditGoalViewStateBuilder()..update(updates)).build();
+  factory _$EditGoalModel([void Function(EditGoalModelBuilder) updates]) =>
+      (new EditGoalModelBuilder()..update(updates)).build();
 
-  _$EditGoalViewState._({this.mode, this.loading, this.saving, this.goal})
+  _$EditGoalModel._({this.mode, this.loading, this.saving, this.goal})
       : super._() {
     if (loading == null) {
-      throw new BuiltValueNullFieldError('EditGoalViewState', 'loading');
+      throw new BuiltValueNullFieldError('EditGoalModel', 'loading');
     }
     if (saving == null) {
-      throw new BuiltValueNullFieldError('EditGoalViewState', 'saving');
+      throw new BuiltValueNullFieldError('EditGoalModel', 'saving');
     }
   }
 
   @override
-  EditGoalViewState rebuild(void Function(EditGoalViewStateBuilder) updates) =>
+  EditGoalModel rebuild(void Function(EditGoalModelBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  EditGoalViewStateBuilder toBuilder() =>
-      new EditGoalViewStateBuilder()..replace(this);
+  EditGoalModelBuilder toBuilder() => new EditGoalModelBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is EditGoalViewState &&
+    return other is EditGoalModel &&
         mode == other.mode &&
         loading == other.loading &&
         saving == other.saving &&
@@ -57,7 +55,7 @@ class _$EditGoalViewState extends EditGoalViewState {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('EditGoalViewState')
+    return (newBuiltValueToStringHelper('EditGoalModel')
           ..add('mode', mode)
           ..add('loading', loading)
           ..add('saving', saving)
@@ -66,9 +64,9 @@ class _$EditGoalViewState extends EditGoalViewState {
   }
 }
 
-class EditGoalViewStateBuilder
-    implements Builder<EditGoalViewState, EditGoalViewStateBuilder> {
-  _$EditGoalViewState _$v;
+class EditGoalModelBuilder
+    implements Builder<EditGoalModel, EditGoalModelBuilder> {
+  _$EditGoalModel _$v;
 
   EditGoalMode _mode;
   EditGoalMode get mode => _$this._mode;
@@ -86,9 +84,9 @@ class EditGoalViewStateBuilder
   GoalBuilder get goal => _$this._goal ??= new GoalBuilder();
   set goal(GoalBuilder goal) => _$this._goal = goal;
 
-  EditGoalViewStateBuilder();
+  EditGoalModelBuilder();
 
-  EditGoalViewStateBuilder get _$this {
+  EditGoalModelBuilder get _$this {
     if (_$v != null) {
       _mode = _$v.mode;
       _loading = _$v.loading;
@@ -100,24 +98,24 @@ class EditGoalViewStateBuilder
   }
 
   @override
-  void replace(EditGoalViewState other) {
+  void replace(EditGoalModel other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$EditGoalViewState;
+    _$v = other as _$EditGoalModel;
   }
 
   @override
-  void update(void Function(EditGoalViewStateBuilder) updates) {
+  void update(void Function(EditGoalModelBuilder) updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$EditGoalViewState build() {
-    _$EditGoalViewState _$result;
+  _$EditGoalModel build() {
+    _$EditGoalModel _$result;
     try {
       _$result = _$v ??
-          new _$EditGoalViewState._(
+          new _$EditGoalModel._(
               mode: mode,
               loading: loading,
               saving: saving,
@@ -129,7 +127,7 @@ class EditGoalViewStateBuilder
         _goal?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'EditGoalViewState', _$failedField, e.toString());
+            'EditGoalModel', _$failedField, e.toString());
       }
       rethrow;
     }
