@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:my_goals/data/goal.dart';
@@ -16,18 +18,25 @@ class GoalsPresenter {
   GoalsView view;
   GoalsManager goalsManager;
 
+  StreamSubscription _subscription;
+
   GoalsPresenter(this.view, this.goalsManager);
 
-  void loadGoals() async {
+  void observeGoals() async {
     view.model = GoalsModel((b) => b
       ..loading = true
     );
 
-    var goals = await goalsManager.getGoals();
-    view.model = GoalsModel((b) => b
-      ..goals = goals.toBuilder()
-      ..loading = false
-    );
+    _subscription = goalsManager.observeGoals().listen((goals) {
+      view.model = GoalsModel((b) => b
+        ..goals = goals.toBuilder()
+        ..loading = false
+      );
+    });
+  }
+
+  void dispose() {
+    _subscription?.cancel();
   }
 
 }

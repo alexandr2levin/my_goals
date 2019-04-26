@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:my_goals/data/goal.dart';
 import 'package:my_goals/domain/goals_manager.dart';
+import 'package:my_goals/presentation/screens/edit_goal/date_countdown_text.dart';
 import 'package:my_goals/presentation/screens/goals/goals.dart';
 import 'package:my_goals/presentation/screens/routes.dart';
 import 'package:built_collection/built_collection.dart';
@@ -13,34 +14,37 @@ class GoalsScreen extends StatefulWidget {
   GoalsScreen(this.goalsManager);
 
   @override
-  State<StatefulWidget> createState() => _GoalsScreenState(goalsManager);
+  State<StatefulWidget> createState() => _GoalsScreenState();
 
 }
 
 class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
 
   @override
-  set model(GoalsModel viewState) {
+  set model(GoalsModel model) {
     setState(() {
-      _viewState = viewState;
+      _model = model;
     });
   }
   @override
   get model {
-    return _viewState;
+    return _model;
   }
-  GoalsModel _viewState;
+  GoalsModel _model;
 
   GoalsPresenter _presenter;
-
-  _GoalsScreenState(GoalsManager goalsManager) {
-    _presenter = GoalsPresenter(this, goalsManager);
-  }
 
   @override
   void initState() {
     super.initState();
-    _presenter.loadGoals();
+    _presenter = GoalsPresenter(this, widget.goalsManager);
+    _presenter.observeGoals();
+  }
+
+  @override
+  void dispose() {
+    _presenter.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,6 +90,8 @@ class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
       itemCount: model.goals.length,
       itemBuilder: (context, i) {
         var goal = model.goals[i];
+
+        var date = goal.date;
         return GestureDetector(
           onTap: () {
             Navigator.of(context).pushNamed(Routes.editGoal, arguments: goal.id);
@@ -93,16 +99,18 @@ class _GoalsScreenState extends State<GoalsScreen> implements GoalsView {
           child: Container(
             margin: EdgeInsets.only(top: 8.0),
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            color: CupertinoColors.white,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   goal.name,
                   style: TextStyle(
-                    fontSize: 14.0,
+                    fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(goal.date.toString()),
+                DateCountdownText(to: date),
               ],
             ),
           ),

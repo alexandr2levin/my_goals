@@ -19,7 +19,7 @@ class EditGoalPresenter {
 
   int goalId;
 
-  get editMode => goalId == null;
+  get editMode => goalId != null;
 
   EditGoalPresenter(this.view, this.goalsManager, this.goalId);
 

@@ -27,22 +27,26 @@ class EditGoalScreen extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => _EditGoalsScreenState(goalsManager);
+  State<StatefulWidget> createState() => _EditGoalsScreenState();
 
 }
 
 class _EditGoalsScreenState extends State<EditGoalScreen> implements EditGoalView {
 
   @override
-  set model(EditGoalModel viewState) {
+  set model(EditGoalModel model) {
     setState(() {
-      _model = viewState;
+      _model = model;
 
-      _nameTextController.text = viewState.goal.name;
+      if(model.goal != null) {
+        if(_nameTextController.text != model.goal.name) {
+          _nameTextController.text = model.goal.name;
+        }
 
-      var date = viewState.goal.date;
-      var formattedDateTime = '${date.day}.${date.month}.${date.year}';
-      _dateTextController.text = formattedDateTime;
+        var date = model.goal.date;
+        var formattedDateTime = date != null ? '${date.day}.${date.month}.${date.year}' : '';
+        _dateTextController.text = formattedDateTime;
+      }
     });
   }
   @override
@@ -59,13 +63,10 @@ class _EditGoalsScreenState extends State<EditGoalScreen> implements EditGoalVie
   var _nameInvalid = false;
   var _dateInvalid = false;
 
-  _EditGoalsScreenState(GoalsManager goalsManager) {
-    _presenter = EditGoalPresenter(this, goalsManager, widget.goalId);
-  }
-
   @override
   void initState() {
     super.initState();
+    _presenter = EditGoalPresenter(this, widget.goalsManager, widget.goalId);
     _presenter.loadGoal();
   }
 
@@ -80,9 +81,17 @@ class _EditGoalsScreenState extends State<EditGoalScreen> implements EditGoalVie
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text(model.mode == EditGoalMode.edit ? 'Править цель' : 'Создать цель'),
+        middle: Text(
+          model.mode == EditGoalMode.edit
+              ? 'Править цель'
+              : model.mode == EditGoalMode.create
+              ? 'Создать цель'
+              : 'Загрузка...',
+        ),
       ),
-      child: _body(),
+      child: SafeArea(
+        child: _body(),
+      ),
     );
   }
 
@@ -97,40 +106,76 @@ class _EditGoalsScreenState extends State<EditGoalScreen> implements EditGoalVie
   }
 
   Widget _editForm() {
-    return Column(
-      children: <Widget>[
-        CupertinoTextField(
-          controller: _nameTextController,
-          placeholder: 'Название твоей цели',
-          onChanged: (text) {
-            setState(() {
-              _nameInvalid = false;
-            });
-          },
-        ),
-        GestureDetector(
-          onTap: () {
-            _pickDate();
-            setState(() {
-              _dateInvalid = false;
-            });
-          },
-          child: IgnorePointer(
-            ignoring: true,
-            child: CupertinoTextField(
-              controller: _dateTextController,
-              placeholder: 'Дата',
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          CupertinoTextField(
+            controller: _nameTextController,
+            placeholder: 'Название твоей цели',
+            onChanged: (text) {
+              model = model.rebuild((b) => b
+                  ..goal.name = text
+              );
+              setState(() {
+                _nameInvalid = false;
+              });
+            },
+          ),
+          _error(_nameInvalid, 'Укажи название'),
+          SizedBox(height: 16.0),
+          GestureDetector(
+            onTap: () {
+              print('pick date');
+              _pickDate();
+              setState(() {
+                _dateInvalid = false;
+              });
+            },
+            child: Container(
+              color: CupertinoColors.white.withOpacity(0.0),
+              child: IgnorePointer(
+                ignoring: true,
+                child: CupertinoTextField(
+                  controller: _dateTextController,
+                  placeholder: 'Дата',
+                ),
+              ),
             ),
           ),
-        ),
-        CupertinoButton.filled(
-          child: Text(model.mode == EditGoalMode.edit ? 'Сохранить' : 'Создать'),
-          onPressed: () {
-            _save();
-          },
-        )
-      ],
+          _error(_dateInvalid, 'Укажи дату'),
+          SizedBox(height: 16.0),
+          Container(
+            width: double.infinity,
+            child: CupertinoButton.filled(
+              child: Text(model.mode == EditGoalMode.edit ? 'Сохранить' : 'Создать'),
+              onPressed: () {
+                _save();
+              },
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  Widget _error(bool show, String text) {
+    if(show) {
+      return Padding(
+        padding: EdgeInsets.only(left: 6.0, top: 4.0),
+        child: Text(
+          text,
+          style: TextStyle(
+              color: Color.fromARGB(255, 255, 0, 0),
+              fontSize: 14.0
+          ),
+          textAlign: TextAlign.start,
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   void _pickDate() {
@@ -158,7 +203,7 @@ class _EditGoalsScreenState extends State<EditGoalScreen> implements EditGoalVie
                 child: CupertinoDatePicker(
                   mode: CupertinoDatePickerMode.date,
                   initialDateTime: initialDate,
-                  maximumYear: initialDate.year,
+                  minimumYear: now.year,
                   onDateTimeChanged: (dateTime) {
                     model = model.rebuild((b) => b
                       ..goal.date = dateTime

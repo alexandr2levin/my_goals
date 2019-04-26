@@ -1,25 +1,39 @@
 
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:my_goals/data/goal.dart';
+import 'package:rxdart/rxdart.dart';
 
 class GoalsManager {
 
-  BuiltList<Goal> goals = BuiltList<Goal>();
+  var _goals = BuiltList<Goal>();
+  var _goalsSubject = BehaviorSubject<BuiltList<Goal>>();
+
+  var _random = Random();
+
+  GoalsManager() {
+    _goalsSubject.add(_goals);
+  }
 
   Future<BuiltList<Goal>> getGoals() async {
     await Future.delayed(Duration(seconds: 1));
-    return goals;
+    return _goals;
+  }
+
+  Stream<BuiltList<Goal>> observeGoals() async* {
+    yield* _goalsSubject;
   }
 
   Future<Goal> getGoal(int id) async {
     await Future.delayed(Duration(seconds: 1));
-    var goal = goals.firstWhere((goal) => goal.id == id, orElse: null);
+    var goal = _goals.firstWhere((goal) => goal.id == id, orElse: () => null);
     if(goal == null) throw 'goal with id "$id" not found';
     return goal;
   }
 
   Future<bool> exists(int id) async {
-    return goals.any((goal) => goal.id == id);
+    return _goals.any((goal) => goal.id == id);
   }
 
   Future<void> saveGoal(Goal goal) async {
@@ -27,7 +41,7 @@ class GoalsManager {
 
     if(await exists(goal.id)) {
       // replace old one with new one
-      goals = goals.rebuild((b) => b
+      _goals = _goals.rebuild((b) => b
           ..map((savedGoal) {
             if(savedGoal.id == goal.id) {
               // replace if id matches
@@ -39,10 +53,11 @@ class GoalsManager {
       );
     } else {
       // append new one
-      goals = goals.rebuild((b) => b
-          ..add(goal)
+      _goals = _goals.rebuild((b) => b
+          ..add(goal.rebuild((b) => b.id = _random.nextInt(1<<32)))
       );
     }
+    _goalsSubject.add(_goals);
   }
 
 }
